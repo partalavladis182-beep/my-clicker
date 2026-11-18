@@ -7,24 +7,23 @@ st.set_page_config(page_title="Мой Кликер", page_icon="🚀")
 st.title("Моя игра")
 
 
-# 2. Общая база приглашений на весь сервер
+# 2. Общая база приглашений и посещений на весь сервер
 @st.cache_resource
 def get_referrals():
-  @st.cache_resource
+  return {}
+
+
+@st.cache_resource
 def get_visits():
-  return {"count": 2}  # начинаем с твоих 2 посещени
+  return {"count": 2}
 
 
+referrals = get_referrals()
 visits_data = get_visits()
 
 if "visit_counted" not in st.session_state:
   visits_data["count"] += 1
   st.session_state.visit_counted = True
-  return {}
-
-
-referrals = get_referrals()
-
 
 # 3. Память игры для каждого игрока
 if "monay" not in st.session_state:
@@ -46,7 +45,7 @@ if "claimed_friends" not in st.session_state:
 
 price3 = 1000
 
-# 4. Проверка перехода по реферальной ссылке (?ref=12345)
+# 4. Проверка перехода по реферальной ссылке
 ref_from_url = st.query_params.get("ref")
 if ref_from_url and "ref_counted" not in st.session_state:
   if ref_from_url != st.session_state.my_ref_id:
@@ -149,5 +148,7 @@ st.caption(
     " придет, как только друг откроет ссылку)"
 )
 
-# 12. Надпись про обновление
-st.write("на сто посещений будет обновление")
+# 12. Живой счетчик посещений и шкала прогресса
+st.divider()
+st.write(f"Посещений: **{visits_data['count']} / 100** (на 100 будет обновление!)")
+st.progress(min(visits_data["count"] / 100, 1.0))
