@@ -129,7 +129,9 @@ if st.button(".", type="tertiary"):
 # 11. Блок приглашения друзей
 st.divider()
 st.subheader("Пригласи друга (+500 монет) 🤝")
-my_link = f"https://streamlit.app{st.session_state.my_ref_id}"
+my_link = (
+    "https://" + "myclicker.streamlit.app/" + "?ref=" + st.session_state.my_ref_id
+)
 st.code(my_link, language=None)
 st.caption(
     f"Приглашено друзей: **{st.session_state.claimed_friends}** (награда"
