@@ -10,10 +10,21 @@ st.title("Моя игра")
 # 2. Общая база приглашений на весь сервер
 @st.cache_resource
 def get_referrals():
+  @st.cache_resource
+def get_visits():
+  return {"count": 2}  # начинаем с твоих 2 посещений
+
+
+visits_data = get_visits()
+
+if "visit_counted" not in st.session_state:
+  visits_data["count"] += 1
+  st.session_state.visit_counted = True
   return {}
 
 
 referrals = get_referrals()
+
 
 # 3. Память игры для каждого игрока
 if "monay" not in st.session_state:
