@@ -88,6 +88,51 @@ if st.button(".", type="tertiary"):
         if not st.session_state.get("egg_used", False):
             st.session_state.monay += 350
             st.session_state.egg_used = True
+import random
+
+# Общая база приглашений на весь сервер
+@st.cache_resource
+def get_referrals():
+  return {}  # формат: {"код_пригласившего": количество_друзей}
+
+
+referrals = get_referrals()
+
+# Присваиваем каждому игроку его уникальный ID при входе
+if "my_ref_id" not in st.session_state:
+  st.session_state.my_ref_id = str(random.randint(10000, 99999))
+if "claimed_friends" not in st.session_state:
+  st.session_state.claimed_friends = 0
+
+# Проверяем, не пришел ли игрок по ссылке друга (?ref=12345)
+ref_from_url = st.query_params.get("ref")
+if ref_from_url and "ref_counted" not in st.session_state:
+  # Нельзя пригласить самого себя
+  if ref_from_url != st.session_state.my_ref_id:
+    referrals[ref_from_url] = referrals.get(ref_from_url, 0) + 1
+    st.session_state.ref_counted = True
+    st.toast("Вы зашли по приглашению друга! 🎉")
+
+# Проверяем, зашли ли приглашенные нами друзья
+total_friends = referrals.get(st.session_state.my_ref_id, 0)
+if total_friends > st.session_state.claimed_friends:
+  new_friends = total_friends - st.session_state.claimed_friends
+  reward = new_friends * 500
+  st.session_state.monay += reward
+  st.session_state.claimed_friends = total_friends
+  st.toast(f"Друг зашел в игру! Награда: +{reward} монет 💰")
+  st.balloons()
+
+# Блок приглашения на экране
+st.divider()
+st.subheader("Пригласи друга (+500 монет) 🤝")
+my_link = f"https://streamlit.app{st.session_state.my_ref_id}"
+st.code(my_link, language=None)
+st.caption(
+    f"Приглашено друзей: **{st.session_state.claimed_friends}** (награда"
+    " придет автоматически, как только друг откроет ссылку)"
+)
+
             st.toast("Тайник найден! +350 монет 🎁")
             st.balloons()
             st.rerun()
