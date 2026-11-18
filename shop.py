@@ -91,3 +91,4 @@ if st.button(".", type="tertiary"):
             st.toast("Тайник найден! +350 монет 🎁")
             st.balloons()
             st.rerun()
+st.write("на сто посищений будет обновление")
