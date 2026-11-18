@@ -12,7 +12,7 @@ st.title("Моя игра")
 def get_referrals():
   @st.cache_resource
 def get_visits():
-  return {"count": 2}  # начинаем с твоих 2 посещений
+  return {"count": 2}  # начинаем с твоих 2 посещени
 
 
 visits_data = get_visits()
